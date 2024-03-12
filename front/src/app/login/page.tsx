@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -37,7 +38,7 @@ export default function Login() {
 
   return (
     <section className="w-screen h-screen flex justify-center items-center">
-      <Card className="w-[80%] lg:w-[25rem]">
+      <Card className="p-4 w-[80%] lg:w-[25rem]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Entre com seu e-mail e senha.</CardDescription>
@@ -45,7 +46,7 @@ export default function Login() {
         <CardContent>
           <form onSubmit={handleSubmit(submit)}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
+              <div className="flex flex-col space-y-2">
                 <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
@@ -55,7 +56,7 @@ export default function Login() {
                   error={errors.email?.message}
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
+              <div className="flex flex-col space-y-2">
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
@@ -68,19 +69,21 @@ export default function Login() {
             </div>
           </form>
         </CardContent>
-        <Link className="ml-auto inline-block text-sm underline" href="#">
-          Esqueci a senha
-        </Link>
-        <Button className="w-full">
-          <EnterIcon />
-          Entrar
-        </Button>
-        <div className="mt-4 text-center text-sm">
-          Ainda não possui conta?{' '}
-          <Link className="underline" href="/cadastro">
-            Cadastre-se
+        <CardFooter className="flex flex-col space-y-4">
+          <Link className="self-start text-sm underline" href="#">
+            Esqueci a senha
           </Link>
-        </div>
+          <Button type="submit" className="w-full gap-2">
+            <EnterIcon />
+            Entrar
+          </Button>
+          <div className="self-start mt-4 text-sm">
+            Ainda não possui conta?{' '}
+            <Link className="underline" href="/cadastro">
+              Cadastre-se
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </section>
   )

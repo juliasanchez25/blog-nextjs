@@ -1,4 +1,6 @@
+'use client'
 import * as React from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -13,9 +15,10 @@ import { Label } from '@/components/ui/label'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema } from './validation'
+import { PersonIcon } from '@radix-ui/react-icons'
 
 type UserRegisterFormData = {
-  companyName: string
+  name: string
   email: string
   password: string
   confirmPassword: string
@@ -37,7 +40,7 @@ export default function Register() {
 
   return (
     <section className="w-screen h-screen flex justify-center items-center">
-      <Card className="w-[80%] lg:w-[25rem]">
+      <Card className="p-4 w-[80%] lg:w-[25rem]">
         <CardHeader>
           <CardTitle>Cadastro</CardTitle>
           <CardDescription>Crie sua conta, fácil e rápido.</CardDescription>
@@ -45,27 +48,17 @@ export default function Register() {
         <CardContent>
           <form onSubmit={submit}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Nome</Label>
-                <Input
-                  id="name"
-                  placeholder="Seu nome"
-                  type="name"
-                  {...register('name')}
-                  error={errors.name?.message}
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
+              <div className="flex flex-col space-y-2">
                 <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
-                  placeholder="exemplo@email.com"
+                  placeholder="exemplo@gmail.com"
                   type="email"
                   {...register('email')}
                   error={errors.email?.message}
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
+              <div className="flex flex-col space-y-2">
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
@@ -75,11 +68,11 @@ export default function Register() {
                   error={errors.password?.message}
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Confirmar senha</Label>
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="confirmPassword">Confirmar senha</Label>
                 <Input
                   id="confirmPassword"
-                  placeholder="*********"
+                  placeholder="*******"
                   type="confirmPassword"
                   {...register('confirmPassword')}
                   error={errors.confirmPassword?.message}
@@ -88,8 +81,20 @@ export default function Register() {
             </div>
           </form>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">Criar conta</Button>
+        <CardFooter className="flex flex-col space-y-4">
+          <Link className="self-start text-sm underline" href="#">
+            Esqueci a senha
+          </Link>
+          <Button type="submit" className="w-full gap-2">
+            <PersonIcon />
+            Cadastrar
+          </Button>
+          <div className="self-start mt-4 text-sm">
+            Já possui conta?{' '}
+            <Link className="underline" href="/login">
+              Fazer login
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     </section>
