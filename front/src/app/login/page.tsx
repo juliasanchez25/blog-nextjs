@@ -16,6 +16,8 @@ import { useForm } from 'react-hook-form'
 import { EnterIcon } from '@radix-ui/react-icons'
 import { loginSchema } from './validation'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 type UserLoginFormData = {
   email: string
@@ -23,8 +25,19 @@ type UserLoginFormData = {
 }
 
 export default function Login() {
+  const login = useMutation<unknown, unknown, UserLoginFormData>({
+    mutationKey: ['login'],
+    mutationFn: async (variables) => {
+      const result = await axios.post(`http://localhost:4000/login`, {
+        body: variables,
+      })
+      console.log(result)
+    },
+  })
+
   const submit = (values: UserLoginFormData) => {
     console.log('values', values)
+    login.mutate(values)
   }
 
   const {
@@ -67,16 +80,17 @@ export default function Login() {
                 />
               </div>
             </div>
+            <Button type="submit" className="w-full gap-2">
+              <EnterIcon />
+              Entrar
+            </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Link className="self-start text-sm underline" href="#">
             Esqueci a senha
           </Link>
-          <Button type="submit" className="w-full gap-2">
-            <EnterIcon />
-            Entrar
-          </Button>
+
           <div className="self-start mt-4 text-sm">
             Ainda não possui conta?{' '}
             <Link className="underline" href="/cadastro">

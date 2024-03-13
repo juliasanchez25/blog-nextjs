@@ -16,6 +16,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema } from './validation'
 import { PersonIcon } from '@radix-ui/react-icons'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 type UserRegisterFormData = {
   name: string
@@ -25,6 +27,16 @@ type UserRegisterFormData = {
 }
 
 export default function Register() {
+  const registerUser = useMutation<unknown, unknown, UserRegisterFormData>({
+    mutationKey: ['register'],
+    mutationFn: async (variables) => {
+      const result = await axios.post(`http://localhost:4000/cadastro`, {
+        body: variables,
+      })
+      console.log(result)
+    },
+  })
+
   const {
     register,
     handleSubmit,
@@ -36,6 +48,7 @@ export default function Register() {
 
   const submit = handleSubmit((values) => {
     console.log('values', values)
+    registerUser.mutate(values)
   })
 
   return (
