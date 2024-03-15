@@ -1,5 +1,7 @@
 'use client'
 import * as React from 'react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,14 +26,27 @@ type UserLoginFormData = {
   password: string
 }
 
+type LoginResponse = {
+  token: string
+  user: {
+    id: string
+    name: string
+    email: string
+    password: string
+    createdAt: string
+  }
+}
+
 export default function Login() {
-  const login = useMutation<unknown, unknown, UserLoginFormData>({
+  const navigation = useRouter()
+  const login = useMutation<LoginResponse, unknown, UserLoginFormData>({
     mutationKey: ['login'],
     mutationFn: async (variables) => {
-      const result = await axios.post(`http://localhost:4000/login`, {
-        body: variables,
-      })
-      console.log(result)
+      const response = await axios.post<LoginResponse>(
+        `http://localhost:4000/login`,
+        variables,
+      )
+      return response.data
     },
   })
 
@@ -49,9 +64,16 @@ export default function Login() {
     mode: 'all',
   })
 
+  useEffect(() => {
+    if (login.data) {
+      localStorage.setItem('token', login.data.token)
+      navigation.push('/timeline')
+    }
+  }, [login.data, navigation])
+
   return (
     <section className="w-screen h-screen flex justify-center items-center">
-      <Card className="p-4 w-[80%] lg:w-[25rem]">
+      <Card className="p-4 w-[21rem] md:w-[25rem]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Entre com seu e-mail e senha.</CardDescription>
@@ -79,21 +101,20 @@ export default function Login() {
                   error={errors.password?.message}
                 />
               </div>
+              <Button type="submit" className="mt-3 w-full gap-2">
+                <EnterIcon />
+                Entrar
+              </Button>
             </div>
-            <Button type="submit" className="w-full gap-2">
-              <EnterIcon />
-              Entrar
-            </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <Link className="self-start text-sm underline" href="#">
             Esqueci a senha
           </Link>
-
           <div className="self-start mt-4 text-sm">
             Ainda não possui conta?{' '}
-            <Link className="underline" href="/cadastro">
+            <Link className="underline" href="/cadastrar">
               Cadastre-se
             </Link>
           </div>
